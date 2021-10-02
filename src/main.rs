@@ -11,30 +11,7 @@ use convert_case::{Case, Casing};
 #[derive(StructOpt, Debug)]
 #[structopt(about = "CNRBRNS")]
 struct Cnr {
-    #[structopt(subcommand)]
-    cmd: Option<Cmd>
- 
-    
-}
-
-#[derive(StructOpt, Debug)]
-enum Cmd {
-    Touch {
-        name: String
-    },
-
-    Create {
-        #[structopt(short, long)]
-        force: bool,
-    
-        /// Get template
-        #[structopt(short = "t", long = "template")]
-        template: Option<String>,
-    
-        /// Get repo name
-        repo_name: String,
-    
-    }
+    names: Vec<String>
 }
 
 fn touch(name: &str) -> std::io::Result<()> {
@@ -56,54 +33,15 @@ fn touch(name: &str) -> std::io::Result<()> {
     Ok(())
 }
 
-fn create(force: bool, template: Option<String>, repo_name: &str) -> std::io::Result<()> {
-    Ok(())
-}
 
 fn main() {
     let args = Cnr::from_args();
     println!("{:?}", args);
+    println!("{:?}", args.names);
 
-   let result =  match args.cmd {
-        Some(cmd) => {
-            let result = match cmd {
-                Cmd::Touch {name } => touch(&name),
-                Cmd::Create {force,template,repo_name} => create(force, template, &repo_name)
-            };
-        },
-        None => println!("Hi! You're running version 0.1.0!")
 
-    };
-    // if args.version {
-    //     println!("0.1.0");
-    //     return
-    // }
- 
-    // match args.repo_name {
-    //     Some(repo_name) => {
-    //         match args.template {
-    //             Some(template) => Command::new("npx")
-    //                 .arg("create-next-app")
-    //                 .arg("-e")
-    //                 .arg(template)
-    //                 .arg(repo_name)
-    //                 .stdout(Stdio::inherit())
-    //                 .stderr(Stdio::inherit())
-    //                 .output()
-    //                 .expect("failed"),
-    //             None => Command::new("npx")
-    //                 .arg("create-next-app")
-    //                 .arg(repo_name)
-    //                 .stdout(Stdio::inherit())
-    //                 .stderr(Stdio::inherit())
-    //                 .output()
-    //                 .expect("failed"),
-    //         };
-    //     },
-    //     None => println!("naw")
-    // };
+    for name in args.names.iter() {
+        let res = touch(&name);
+    }
 
-   
-
-    // let uh = output.stdout;
 }
