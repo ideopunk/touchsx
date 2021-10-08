@@ -1,11 +1,9 @@
-// use cmd_lib::*;
-// use std::process::{Command, Stdio};
 use structopt::StructOpt;
-// use std::io::{BufRead, BufReader, Error, ErrorKind};
 use std::fs::File;
 use regex::Regex;
 use std::io::prelude::*;
 use convert_case::{Case, Casing};
+use std::path::Path;
 
 /// Create a .tsx file. 
 #[derive(StructOpt, Debug)]
@@ -46,6 +44,16 @@ fn touch(name: &str) -> std::io::Result<()> {
     Ok(())
 }
 
+fn touches(names: Vec<String>) {
+    for name in names.iter() {
+        let res = touch(&name);
+        match res {
+            Err(e) => eprintln!("{}", e),
+            _ => println!(":)", ),
+
+        }
+    }
+}
 
 fn main() {
     let args = TSX::from_args();
@@ -55,12 +63,25 @@ fn main() {
         return
     }
 
-    for name in args.names.iter() {
-        let res = touch(&name);
-        match res {
-            Err(e) => eprintln!("{}", e),
-            _ => println!(":)", ),
+    touches(args.names);
+}
 
-        }
-    }
+#[test]
+fn touch_one_file_with_ext() {
+    let _ = touch("fake.tsx");
+    assert_eq!(true, Path::new("fake.tsx").exists())
+}
+
+#[test]
+fn touch_one_file_without_ext() {
+    let _ = touch("fake");
+    assert_eq!(true, Path::new("fake.tsx").exists())
+}
+
+#[test]
+fn touch_multiple_files() {
+    let _ = touches(vec![String::from("gom"), String::from("jabbar")]);
+    assert_eq!(true, Path::new("gom.tsx").exists());
+    assert_eq!(true, Path::new("jabbar.tsx").exists())
+
 }
