@@ -1,14 +1,16 @@
 use std::fs::File;
 use std::io::prelude::*;
-use std::path::Path;
 use structopt::StructOpt;
 use regex::Regex;
 use convert_case::{Case, Casing};
+#[cfg(test)]
+use std::path::Path;
 
 /// Create a Typescript file. 
 #[derive(StructOpt, Debug)]
-#[structopt(about = "create a react file")]
+#[structopt(about = "Create a Javascript file")]
 struct TSX {
+    /// Name of file
     names: Vec<String>
 }
 
@@ -49,7 +51,7 @@ fn touches(names: Vec<String>) {
         let res = touch(&name);
         match res {
             Err(e) => eprintln!("{}", e),
-            _ => println!(":)", ),
+            _ => (),
 
         }
     }
@@ -59,27 +61,27 @@ fn main() {
     let args = TSX::from_args();
 
     if args.names.len() == 0 {
-        println!("Please include a file name.");
+        println!("Please include a file name.\nTry 'touchsx --help' for more information.");
         return
     }
 
     touches(args.names);
 }
 
-#[test]
-fn touch_one_file_with_ext() {
+#[cfg(test)]
+pub fn touch_one_file_with_ext() {
     let _ = touch("fake.tsx");
     assert_eq!(true, Path::new("fake.tsx").exists())
 }
 
-#[test]
-fn touch_one_file_without_ext() {
+#[cfg(test)]
+pub fn touch_one_file_without_ext() {
     let _ = touch("fake");
     assert_eq!(true, Path::new("fake.tsx").exists())
 }
 
-#[test]
-fn touch_multiple_files() {
+#[cfg(test)]
+pub fn touch_multiple_files() {
     let _ = touches(vec![String::from("gom"), String::from("jabbar")]);
     assert_eq!(true, Path::new("gom.tsx").exists());
     assert_eq!(true, Path::new("jabbar.tsx").exists())
