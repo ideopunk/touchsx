@@ -1,13 +1,13 @@
-use structopt::StructOpt;
 use std::fs::File;
-use regex::Regex;
 use std::io::prelude::*;
-use convert_case::{Case, Casing};
 use std::path::Path;
+use structopt::StructOpt;
+use regex::Regex;
+use convert_case::{Case, Casing};
 
-/// Create a .tsx file. 
+/// Create a Typescript file. 
 #[derive(StructOpt, Debug)]
-#[structopt(about = "CNRBRNS")]
+#[structopt(about = "create a react file")]
 struct TSX {
     names: Vec<String>
 }
