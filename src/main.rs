@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::prelude::*;
 use structopt::StructOpt;
-use regex::Regex;
+// use regex::Regex;
 use convert_case::{Case, Casing};
 #[cfg(test)]
 use std::path::Path;
@@ -15,34 +15,40 @@ struct TSX {
 }
 
 fn touch(name: &str) -> std::io::Result<()> {
-    let re = Regex::new(r"\w+\.[jt]sx*").unwrap();
 
-    if re.is_match(name) {
-        let mut file = File::create(name)?;
-        let (pref, ext) = name.split_once(".").unwrap();
-        if ext == "tsx" || ext == "jsx" {
-            let format_name_cased = &pref.to_case(Case::Pascal);
-            let content = format!("export default function {}() {{\n\treturn (\n\n\t)\n}}", format_name_cased);
-            file.write_all(content.as_bytes())?;
-        } else if ext == "ts" || ext == "js" {
-            let format_name_cased = &pref.to_case(Case::Camel);
-            let content = format!("export default function {}() {{\n\treturn (\n\n\t)\n}}", format_name_cased);
-            file.write_all(content.as_bytes())?;
-        }
+    // add a file extension if none exists
+    let extended_name = if name.contains(".") {
+        String::from(name)
     } else {
-        
-        let mut file = if name.contains(".") {
-            File::create(format!("{}", name))?
-        } else {
-            File::create(format!("{}.tsx", name))?
-        };
+        format!("{}.tsx", name)
+    };
 
-        let format_name = name.to_case(Case::Pascal);
-        let content = format!("export default function {}() {{\n\treturn (\n\n\t)\n}}", 
-            &format_name.split_once(".").unwrap_or((&format_name, "")).0);
-        file.write_all(content.as_bytes())?;
-        
-    }
+    let clone_name = extended_name.clone();
+
+    // create the file
+    let mut file = File::create(extended_name)?;
+
+    // snag the function name from the file name
+
+    let (pref, ext) = clone_name.split_once(".").unwrap();
+
+    let simple_name = if pref.contains("/") {
+        pref.rsplitn(2, "/").collect::<Vec<&str>>()[0]
+    } else {
+        pref
+    };
+
+
+    let format_name_cased =  if ext == "tsx" || ext == "jsx" {
+        simple_name.to_case(Case::Pascal)
+    } else  {
+        simple_name.to_case(Case::Camel)
+    }; 
+
+    // write out the boilerplate
+    let content = format!("export default function {}() {{\n\treturn (\n\n\t)\n}}", format_name_cased);
+    file.write_all(content.as_bytes())?;
+ 
     Ok(())
 }
 
