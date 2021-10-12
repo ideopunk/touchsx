@@ -27,4 +27,4 @@ export default function dopeFunc() {
 
 As with `touch`, multiple filenames can be passed in: `touchsx DopeFunc CoolFunc RadFunc`
 
-Open for PRs and for suggestions. 
+Open for PRs and for suggestions!
