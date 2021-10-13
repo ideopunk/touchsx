@@ -9,7 +9,6 @@ license = "MIT"
 
 [dependencies]
 structopt = "0.3.13"
-regex = "1"
 convert_case = "0.4.0"
 
 [profile.release]
