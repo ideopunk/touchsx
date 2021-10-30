@@ -2,5 +2,6 @@
 todo.txt
 *.tsx
 *.ts
+**/*.tsx
 /fake/
 /.vscode/

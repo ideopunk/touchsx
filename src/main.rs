@@ -12,11 +12,20 @@ struct TSX {
 }
 
 pub fn touch(name: &str) -> std::io::Result<()> {
-    // add a file extension if none exists
-    let extended_name = if name.contains(".") {
-        String::from(name)
+
+    // don't let the ref to current directory confuse the program.
+    let not_relative_name = if name.starts_with("./") {
+        let (_, rest) = name.split_at(2);
+        rest
     } else {
-        format!("{}.tsx", name)
+        name
+    };
+
+    // add a file extension if none exists
+    let extended_name = if not_relative_name.contains(".") {
+        String::from(not_relative_name)
+    } else {
+        format!("{}.tsx", not_relative_name)
     };
 
     let clone_name = extended_name.clone();
