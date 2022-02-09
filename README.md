@@ -1,6 +1,16 @@
-This tool is intended to be a buffed `touch` for React projects. Upon creating a file, it also creates boilerplate for a Typescript module. 
+This tool is intended to be a buffed `touch` for React projects. Upon creating a file, it also creates boilerplate for a Typescript module.
 
-How it works:
+```
+USAGE:
+    touchsx [names]...
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <names>...    Name of file
+```
 
 ```typescript
 // touchsx dopeFunc.tsx
@@ -24,7 +34,5 @@ export default function dopeFunc() {
 	)
 }
 ```
-
-As with `touch`, multiple filenames can be passed in: `touchsx DopeFunc CoolFunc RadFunc`
 
 Open for PRs and for suggestions!

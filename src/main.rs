@@ -14,14 +14,8 @@ struct TSX {
 }
 
 pub fn touch(prename: &PathBuf) -> std::io::Result<()> {
-    // don't let the ref to current directory confuse the program.
-    // let not_relative_name = if name.starts_with("./") {
-    //     let (_, rest) = name..split_at(2);
-    //     rest
-    // } else {
-    //     name
-    // };
     let mut name = prename.clone();
+
     // add a file extension if none exists
     let _ = match name.extension() {
         None => name.set_extension("tsx"),
@@ -103,6 +97,15 @@ mod tests {
         let contents = fs::read_to_string("src/fake.tsx").unwrap();
         println!("{}", contents);
         let proper_contents = contents.contains(" Fake");
+        assert_eq!(true, proper_contents)
+    }
+
+    #[test]
+    fn touch_non_jsx_file_in_subdirectory() {
+        let _ = touch(&PathBuf::from("src/fake.ts"));
+        let contents = fs::read_to_string("src/fake.ts").unwrap();
+        println!("{}", contents);
+        let proper_contents = contents.contains(" fake");
         assert_eq!(true, proper_contents)
     }
 }
